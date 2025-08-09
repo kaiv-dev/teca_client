@@ -74,16 +74,16 @@ export const DefaultWindow = {
     max_size: vec2(5000, 5000),
     min_size: vec2(50, 50),
     inactive_since: 0,
-
-    type: {
-        mode: 'floating',
-        drag_offset: vec2(0, 0),
-        magnet: null,
-        pinned: false,
-        resizing: null,
-        grabbed: null
-    } as FloatingWindowType
 }
+
+export const DefaultWindowType = {
+    mode: 'floating',
+    drag_offset: vec2(0, 0),
+    magnet: null,
+    pinned: false,
+    resizing: null,
+    grabbed: null
+};
 
 export const WINDOWS : Writable<Record<string, FloatingWindow>> = writable({
     // dev: {

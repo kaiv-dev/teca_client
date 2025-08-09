@@ -11,7 +11,7 @@
     import Button from "../../components/content/button.svelte";
     import { localState, prettify, shakeById } from "$lib/util.svelte";
     import ThemePreview from "../../components/content/theme_preview.svelte";
-    import { DefaultWindow, openFloating, vec2, type FloatingWindow } from "$lib/window/floating.svelte";
+    import { DefaultWindow, openFloating, vec2, type FloatingWindow, type FloatingWindowType, DefaultWindowType } from "$lib/window/floating.svelte";
     import AppThemeEditor from "$lib/../components/window/app_theme_editor.svelte";
     import { logout } from "$lib/api/auth.svelte";
     import Miniprofile from "../../components/user/miniprofile.svelte";
@@ -72,6 +72,7 @@
             size: vec2(600, 600),
             max_size: vec2(600, 900),
             id: "theme_editor",
+            type: {...DefaultWindowType} as FloatingWindowType,
             props: {
                 id: "theme_editor",
             }
@@ -90,6 +91,7 @@
             min_size: vec2(265, 300),
             max_size: vec2(300, 800),
             id: "miniprofile_editor",
+            type: {...DefaultWindowType} as FloatingWindowType,
             props: {
                 id: "miniprofile_editor",
                 onclose: () => {profile_editor += 1},

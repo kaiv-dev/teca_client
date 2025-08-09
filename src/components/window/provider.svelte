@@ -51,7 +51,6 @@
                 <div class="z-[250] absolute -bottom-1 -left-1 w-2 h-2 cursor-nesw-resize" onmousedown={(e) => handleResizeStart(e, w, 0b0110)}></div>
                 <div class="z-[250] absolute -top-1 -left-1 w-2 h-2 cursor-nwse-resize" onmousedown={(e) => handleResizeStart(e, w, 0b1010)}></div>
             {/if}
-            {#if w.dbg}{w.dbg}{/if}
             <svelte:component this={w.component} {...w.props}>
                 <div class="w-full h-full z-250" slot="draggable" onmousedown={(e) => {handleMouseDown(e, w, id)}}></div>
             </svelte:component>

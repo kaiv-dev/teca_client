@@ -4,6 +4,7 @@
   import Avatar from '../user/avatar.svelte';
   import { USER_GUID } from '$lib/token.svelte';
   import { get_miniprofile, type MiniProfile } from '$lib/api/profile.svelte';
+  import { onDestroy } from 'svelte';
 
   let {
     private : secured  = false,
@@ -25,18 +26,10 @@
     } 
   }
 
-  type member = {
-    id: string;
-    name: string;
-  }
+  onDestroy(() => {
+    opened = false
+  })
 
-  // let members : member[] = $state([
-  //   { id: '1', name: 'Avatar 1' },
-  //   { id: '2', name: 'Avatar 2' },
-  //   { id: '3', name: 'Avatar 3' },
-  //   { id: '4', name: 'Avatar 4' },
-  //   { id: '5', name: 'Avatar 5' },
-  // ])
 
   let opened = $state(true);
 
@@ -60,7 +53,7 @@
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="card-200 card-200-border p-0.5 relative">
+<div class="card-200 card-200-border p-0.5 relative" in:slide>
    <button
     class="h-[38px] w-[32px] absolute right-0 flex items-center justify-center cursor-pointer no-focus"
     tabindex="-1"
@@ -76,7 +69,7 @@
   </button>
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div class="flex flex-row items-center max-h-[36px] h-[36px] overflow-hidden relative px-2 gap-2 mr-6 cursor-pointer no-focus"
-  onclick={() => onclick(channel_id)}>
+    onclick={() => onclick(channel_id)}>
       {#if secured}
         <Icon class="min-w-[24px] p-[3px]  -translate-x-[1px]" icon="fa:lock" height=24px/>
       {:else}
@@ -97,13 +90,13 @@
     <div transition:slide class="flex flex-col px-2 pb-2 gap-1">
         {#each members as member (member.id)}
           <div transition:slide class="member">
-          {#if opened}
-            <div transition:fly_x|global class="flex flex-row gap-1 items-center font-semibold">
-              <Avatar class="w-8 h-8 hover:scale-105 transition-transform" mini url={{nickname: member.name}} ></Avatar>
-              <div>{member.name}</div>
-            </div>
-            {/if}
           </div>
+          {#if opened}
+          <div in:fly_x|global  class="flex flex-row gap-1 items-center font-semibold">
+            <Avatar class="w-8 h-8 hover:scale-105 transition-transform" mini url={{nickname: member.name}} ></Avatar>
+            <div>{member.name}</div>
+          </div>
+          {/if}
         {/each}
     </div>
   {/if}

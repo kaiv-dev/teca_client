@@ -38,7 +38,7 @@ export type Profile = {
 }
 
 export type MiniProfile = {
-    guid: string,
+    uid: string,
     nickname: string,
     encoded_theme: string | null,
     background: string | null,

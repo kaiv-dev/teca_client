@@ -43,8 +43,8 @@
         // if (em) applyMiniprofileTheme(theme, em);
         if (em) document.getElementById(em_id)?.setAttribute("style", style);
     });
-    let viewport;
-    let contents;
+    let viewport : HTMLElement | null = $state(null);
+    let contents : HTMLElement | null = $state(null);
 
 
 
@@ -105,7 +105,7 @@ in:scale={{duration: 300, easing: easeOutQuint, start: 0.5}}
         <button class="pr-2 cursor-pointer"><Icon icon="mingcute:close-fill" class="hover:text-gray-500" onclick={() => {if (onclose) onclose();closeFloating(id)}}/></button>
         <div class="w-full absolute bottom-0 horizontal_separator "></div>
     </div>
-    <div class="w-full flex-grow cursor-auto bg-inherit">
+    <div class="w-full flex-grow cursor-auto bg-inherit relative">
         <div bind:this={viewport} class="viewport w-full h-full overflow-y-scroll bg-inherit">
             <!-- dont ask about h-[1px], idk -->
 
@@ -187,6 +187,6 @@ in:scale={{duration: 300, easing: easeOutQuint, start: 0.5}}
                 }}>Save</Button>
             </div>
         </div>
-        <!-- <Svrollbar {viewport} {contents} /> -->
+        <Svrollbar {viewport} {contents} />
     </div>
 </div>

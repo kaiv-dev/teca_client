@@ -90,7 +90,7 @@
              <!-- overflow-y-visible -->
             <div class="flex flex-col h-full justify-center pt-[14px] flex-grow max-w-[200px] overflow-ellipsis">
                 <div class="text-2xl pr-2 truncate font-bold">{$profile?.miniprofile.nickname}</div>
-                <div  class="text-xs font-bold opacity-75 pl-0.5">{$profile?.miniprofile.guid}</div>
+                <div  class="text-xs font-bold opacity-75 pl-0.5">{$profile?.miniprofile.uid}</div>
                 <!-- <div class="flex flex-row gap-1"> -->
                 <!-- </div> -->
                 <!-- <div class="flex flex-row gap-1">
