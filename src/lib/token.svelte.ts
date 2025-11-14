@@ -17,9 +17,12 @@ export function setAccess(token: {access_token: string, exp: number} | null) {
     const delay = (token.exp - now - 10) * 1000;
     if (delay > 0) {
         ACCESS_TOKEN.set(token.access_token);
-        USER_GUID.set(parseJwt(token.access_token).user);
+        console.log("[SYSTEM] access_token", token.access_token);
+        let guid = parseJwt(token.access_token).user;
+        USER_GUID.set(guid);
+        console.log('[SYSTEM] user_guid', guid);
         refreshTimeout = setTimeout(() => {
-        refreshToken();
+            refreshToken();
         }, delay);
     } else {
         ACCESS_TOKEN.set(null);

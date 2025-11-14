@@ -9,9 +9,9 @@
     import BorderCheckbox from "../../components/content/border_checkbox.svelte";
     import { updated } from "$app/state";
     import Button from "../../components/content/button.svelte";
-    import { localState, prettify, shakeById } from "$lib/util.svelte";
+    import { localState, prettify, shakeById, vec2 } from "$lib/util.svelte";
     import ThemePreview from "../../components/content/theme_preview.svelte";
-    import { DefaultWindow, openFloating, vec2, type FloatingWindow, type FloatingWindowType, DefaultWindowType } from "$lib/window/floating.svelte";
+    import { DefaultWindow, openFloating, type FloatingWindow, type FloatingWindowType, DefaultWindowType } from "$lib/window/floating.svelte";
     import AppThemeEditor from "$lib/../components/window/app_theme_editor.svelte";
     import { logout } from "$lib/api/auth.svelte";
     import Miniprofile from "../../components/user/miniprofile.svelte";

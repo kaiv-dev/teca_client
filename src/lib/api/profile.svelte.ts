@@ -190,3 +190,13 @@ export async function uploadToCatbox(file: File) : Promise<{err?: string, url?: 
     }
     return {err: "Error uploading file}"}
 }
+
+export async function get_all_guids() : Promise<string[]> {
+    try {
+        const res = await fetch(`${PUBLIC_API_BASE}/api/user/guids`);
+        if (!res.ok) return [];
+        let j = await res.json();
+        return j;
+    } catch {}
+    return []
+}

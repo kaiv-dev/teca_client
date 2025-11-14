@@ -171,12 +171,12 @@
     >
     <NavbarItem link="/0playground" icon="mingcute:bug-line">0playground</NavbarItem>
         <div class="flex-grow"></div>
+        <NavbarItem link="/calls" icon="tabler:phone">Calls</NavbarItem>
+        <NavbarItem link="/u" icon="mingcute:user-search-line">Users</NavbarItem>
         {#if $USER_GUID == null}
         <!-- <NavbarItem link="/us" icon="mingcute:user-search-line">Users</NavbarItem> -->
-        <NavbarItem link="/calls" icon="tabler:phone">Calls</NavbarItem>
         <NavbarItem link="/login" icon="mingcute:user-add-2-line">Login</NavbarItem>
         {:else}
-        <NavbarItem link="/calls" icon="tabler:phone">Calls</NavbarItem>
         <!-- <NavbarItem link="/us" icon="mingcute:user-search-line">Users</NavbarItem> -->
         <NavbarItem link="/u/{$USER_GUID}" icon="mingcute:user-3-line">Profile</NavbarItem>
         {/if}

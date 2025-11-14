@@ -1,13 +1,20 @@
 <script lang="ts">
+  import { refresh_user_miniprofile_cache } from "$lib/globals.svelte";
+  import { destroyFollowingMiniprofile, showFollowingMiniprofile } from "$lib/window/util.svelte";
+  import { onDestroy } from "svelte";
+
     let { 
-        url, 
+        url,
         class : extra_class = "",
         mini=false,
+        hover_profile=null,
         onclick = () => {},
+        ...rest
     } : {
         url: { path?: string | null; nickname?: string },
         class?: String,
         mini?: boolean,
+        hover_profile?: string | null,
         onclick?: (e: MouseEvent) => void
     } = $props();
     // Get identifier (either path or nickname)
@@ -21,12 +28,19 @@
         return Math.abs(hash);
     }
     let hue = url.nickname ? hashString(url.nickname) % 360 : 0;
-
     let firstLetter = url.nickname?.[0]?.toUpperCase() ?? "?";
+    let id = "miniprofile_"+hover_profile + Math.ceil(Math.random() * 1000000);
+    onDestroy(() => {
+        destroyFollowingMiniprofile(id);
+    })
 </script>
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="{extra_class}" onclick={onclick}>
+<div class="{extra_class}" 
+    onclick={onclick} 
+    onmouseenter={() => {if (hover_profile) showFollowingMiniprofile(hover_profile, id)}}
+    onmouseleave={() => {if (hover_profile) destroyFollowingMiniprofile(id)}}
+    >
     {#if url.path}
         <img class="mini-bg pointer-events-none" src={url.path} alt="" onerror={(em: any) => {em.currentTarget.src="/placeholder.jpg"}}>
     {:else}

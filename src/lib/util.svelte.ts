@@ -87,3 +87,52 @@ export function clamp(num: number, min: number, max: number) {
     return Math.min(Math.max(num, min), max);
 }
 
+
+type BestGrid = {
+        cols: number;
+        rows: number;
+        tileWidth: number;
+        tileHeight: number;
+        usedArea: number;  
+        fillFraction: number; 
+    };
+
+export function best_grid(A: number, B: number, C: number): BestGrid | null {
+    if (!(A > 0 && B > 0 && C >= 1 && Number.isFinite(A) && Number.isFinite(B))) {
+        return null
+    }
+
+    const W = A;
+    const H = 1;
+
+    let best: BestGrid | null = null;
+
+    for (let cols = 1; cols <= C; cols++) {
+        const rows = Math.ceil(C / cols);
+        const th = Math.min(H / rows, W / (B * cols));
+        const tw = B * th;
+        const usedArea = C * tw * th;
+        const fillFraction = usedArea / (W * H);
+        if (best === null || usedArea > best.usedArea) {
+        best = { cols, rows, tileWidth: tw, tileHeight: th, usedArea, fillFraction };
+        }
+    }
+
+    return best!;
+}
+
+
+
+export type Vec2 = {x: number, y: number};
+export const vec2 = (x: number, y: number): Vec2 => ({x, y});
+export const add = (a: Vec2, b: Vec2): Vec2 => ({ x: a.x + b.x, y: a.y + b.y });
+export const sub = (a: Vec2, b: Vec2): Vec2 => ({ x: a.x - b.x, y: a.y - b.y });
+export const mul = (a: Vec2, b: number): Vec2 => ({ x: a.x * b, y: a.y * b });
+export const div = (a: Vec2, b: number): Vec2 => ({ x: a.x / b, y: a.y / b });
+export const e2pos = (e: MouseEvent): Vec2 => ({ x: e.clientX, y: e.clientY });
+export const length_squared = (v: Vec2): number => v.x * v.x + v.y * v.y;
+export const length = (v: Vec2): number => Math.sqrt(length_squared(v));
+export const is_zero = (v: Vec2): boolean => v.x == 0 && v.y == 0;
+export const normalize = (v: Vec2): Vec2 => {let l = length(v); return div(v, l)};
+export const normalize_or_zero = (v: Vec2): Vec2 => {let l = length(v); return l == 0 ? vec2(0, 0) : div(v, l)};
+export const move_towards = (a: number, b: number, speed: number): number => Math.min(Math.max(a, b), a + (b - a) * speed);

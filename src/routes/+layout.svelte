@@ -5,7 +5,7 @@
 
   	import "../app.css";
 	import "../global.css";
-	
+
 	let { children } = $props();
 
 	// bye bye 😢
@@ -23,19 +23,18 @@
 	import ResizableNavbar from "../components/navbar/resizable_navbar.svelte";
 	import BackgroundShaderNoise from "../components/bg/noise.svelte";
 	import DesktopTitlebar from "../components/platform/desktop/titlebar.svelte";
-  	import Debug from "$lib/debug.svelte";
   	import { isDesktop } from "$lib/platform.svelte";
   	import ScriptEntrypoint from "$lib/script_entrypoint.svelte";
 	import ToastContainer from "../components/toast/toast_container.svelte";
   	import LoadingScreen from "../components/loading_screen.svelte";
   	import WindowProvider from '../components/window/provider.svelte';
+  import { TITLEBAR_SIZE } from '$lib/globals.svelte';
 </script>
 {#if hideRootLayout}
 {@render children()}
 {:else}
 <ScriptEntrypoint/>
 <WindowProvider/>
-<Debug/>
 <BackgroundShaderNoise/>
 <LoadingScreen/>
 <ToastContainer />

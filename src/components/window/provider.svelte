@@ -1,36 +1,37 @@
 <script lang="ts">
-    import { closeFloating, DefaultWindow, FLOATING_CONTAINER_ID, FLOATING_PREFIX, handleMouseDown, handleResizeStart, openFloating, vec2, WINDOWS, type FloatingWindow } from "$lib/window/floating.svelte";
+    import { closeFloating, DefaultWindow, FLOATING_CONTAINER_ID, FLOATING_PREFIX, handleMouseDown, handleResizeStart, openFloating, WINDOWS, type FloatingWindow } from "$lib/window/floating.svelte";
     import { onMount } from "svelte";
     import MiniprofilePopup from "./miniprofile_popup.svelte";
     import { USER_GUID } from "$lib/token.svelte";
     import { get } from "svelte/store";
-    function openProfileWindow(guid: string) {
-        openFloating({
-            ...DefaultWindow,
-            component: MiniprofilePopup,
-            min_size: vec2(265, 300),
-            size: vec2(265, 300), //340 120
-            max: vec2(300, 600),
-            id: "miniprofile_test",
-            type: {mode: "follow", id: guid},
-            props: {
-                window_id: "miniprofile_test",
-                user_id: guid,
-            }
-        } as FloatingWindow); 
-    }
-    USER_GUID.subscribe(guid => {
-        if (guid) {
-            closeFloating("miniprofile_test")
-            openProfileWindow(guid);
-        }
-    })
-    onMount(() => {
-        let guid = get(USER_GUID);
-        if (guid) {
-            openProfileWindow(guid)
-        }
-    })
+    import { vec2 } from "$lib/util.svelte";
+    // function openProfileWindow(guid: string) {
+    //     openFloating({
+    //         ...DefaultWindow,
+    //         component: MiniprofilePopup,
+    //         min_size: vec2(265, 300),
+    //         size: vec2(265, 300), //340 120
+    //         max: vec2(300, 600),
+    //         id: "miniprofile_test",
+    //         type: {mode: "follow", id: guid, delay: 0, remaining: 0, x_offset: 32},
+    //         props: {
+    //             window_id: "miniprofile_test",
+    //             user_id: guid,
+    //         }
+    //     } as FloatingWindow); 
+    // }
+    // USER_GUID.subscribe(guid => {
+    //     if (guid) {
+    //         closeFloating("miniprofile_test")
+    //         openProfileWindow(guid);
+    //     }
+    // })
+    // onMount(() => {
+    //     let guid = get(USER_GUID);
+    //     if (guid) {
+    //         openProfileWindow(guid)
+    //     }
+    // })
 </script>
 
 
@@ -39,7 +40,7 @@
     {#each Object.entries($WINDOWS) as [id, w] (id)}
         <div 
             id="{FLOATING_PREFIX}{id}"
-            class="absolute shadow-lg pointer-events-auto translate-x-[-50%] translate-y-[-50%] { w.type.mode === "floating" ? "cursor-grab active:cursor-grabbing" : "" }" 
+            class="absolute shadow-lg translate-x-[-50%] translate-y-[-50%] { w.type.mode === "floating" ? "cursor-grab active:cursor-grabbing pointer-events-auto" : " " }" 
             style="top: calc(50% + {w.pos.y}px); left: calc(50% + {w.pos.x}px); width: {w.size.x}px; height: {w.size.y}px; z-index: {w.z_index};">
             {#if w.type.mode === "floating"}
                 <div class="z-[250] absolute -top-1 w-full h-2 cursor-n-resize" onmousedown={(e) => handleResizeStart(e, w, 0b1000)}></div>
@@ -54,6 +55,9 @@
             <svelte:component this={w.component} {...w.props}>
                 <div class="w-full h-full z-250" slot="draggable" onmousedown={(e) => {handleMouseDown(e, w, id)}}></div>
             </svelte:component>
+            {#if w.dbg != ""}
+            <div class="absolute top-0 text-red-400 bottom-0"> {w.dbg}</div>
+            {/if}
         </div>
     {/each}
 </div>

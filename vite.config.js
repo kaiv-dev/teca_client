@@ -18,9 +18,14 @@ export default defineConfig(async () => ({
     strictPort: true,
     host: host || false,
     proxy: {
+      '/api/calls' : {
+        target: 'wss://vesper.kaiv.space',
+        secure: true,
+        changeOrigin: true
+      },
 			'/api': {
-				target: 'https://localhost',
-        secure: false,
+				target: 'https://vesper.kaiv.space',
+        secure: true,
 				changeOrigin: true,
 			},
       '/assets': {

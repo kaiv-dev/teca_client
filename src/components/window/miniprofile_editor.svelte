@@ -15,8 +15,8 @@
     import { newToast } from "$lib/toast.svelte";
     import BorderInput from "../content/border_input.svelte";
     import { Svrollbar } from "svrollbar";
-  import { refresh_user_miniprofile_cache } from "$lib/globals.svelte";
-  import { USER_GUID } from "$lib/token.svelte";
+    import { refresh_user_miniprofile_cache } from "$lib/globals.svelte";
+    import { USER_GUID } from "$lib/token.svelte";
 
     let {
         id,

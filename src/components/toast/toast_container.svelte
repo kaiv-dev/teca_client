@@ -11,6 +11,7 @@
   }
 </script>
 
+{#if $items.length > 0}
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div 
   class="container absolute bottom-0 right-0 w-[256px] h-fit p-4 space-y-2 z-20"
@@ -42,8 +43,8 @@
       </li>
     {/each}
   </ul>
-  
 </div>
+{/if}
 <style>
   @keyframes appear {
     from {

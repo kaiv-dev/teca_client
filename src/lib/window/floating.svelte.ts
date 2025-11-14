@@ -1,28 +1,13 @@
 import { MOUSE_POS, TITLEBAR_SIZE } from "$lib/globals.svelte";
-import { clamp, localState, shakeById } from "$lib/util.svelte";
-import type { SvelteComponent } from "svelte";
-import { get, writable, type Writable } from "svelte/store";
+import { add, clamp, e2pos, is_zero, length_squared, length, localState, mul, normalize_or_zero, shakeById, sub, vec2, type Vec2 } from "$lib/util.svelte";
+import { writable, type Writable } from "svelte/store";
 
 export const FLOATING_PREFIX = "floating_window_";
 export const FLOATING_CONTAINER_ID = "floating_container";
 
-export type Vec2 = {x: number, y: number};
-export const vec2 = (x: number, y: number): Vec2 => ({x, y});
-export const add = (a: Vec2, b: Vec2): Vec2 => ({ x: a.x + b.x, y: a.y + b.y });
-export const sub = (a: Vec2, b: Vec2): Vec2 => ({ x: a.x - b.x, y: a.y - b.y });
-export const mul = (a: Vec2, b: number): Vec2 => ({ x: a.x * b, y: a.y * b });
-export const div = (a: Vec2, b: number): Vec2 => ({ x: a.x / b, y: a.y / b });
-export const e2pos = (e: MouseEvent): Vec2 => ({ x: e.clientX, y: e.clientY });
-export const length_squared = (v: Vec2): number => v.x * v.x + v.y * v.y;
-export const length = (v: Vec2): number => Math.sqrt(length_squared(v));
-export const is_zero = (v: Vec2): boolean => v.x == 0 && v.y == 0;
-export const normalize = (v: Vec2): Vec2 => {let l = length(v); return div(v, l)};
-export const normalize_or_zero = (v: Vec2): Vec2 => {let l = length(v); return l == 0 ? vec2(0, 0) : div(v, l)};
-export const move_towards = (a: number, b: number, speed: number): number => Math.min(Math.max(a, b), a + (b - a) * speed);
-
-let half_screen = mul(vec2(window.innerWidth, (window.innerHeight - TITLEBAR_SIZE)), 0.5);
 
 
+export let half_screen = mul(vec2(window.innerWidth, (window.innerHeight - TITLEBAR_SIZE)), 0.5);
 
 
 let latest_resize = Date.now();
@@ -54,6 +39,7 @@ export type FloatingWindow = {
     velocity: Vec2,
     size: Vec2,
     z_index: number,
+    just_appear: boolean,
 
     max_size: Vec2,
     min_size: Vec2,
@@ -63,7 +49,7 @@ export type FloatingWindow = {
 export type FloatingWindowType =
     | { mode: 'floating', drag_offset: Vec2, pinned: boolean, magnet: Magnet | null, resizing: null | { edge: number, start_mouse: Vec2, start_size: Vec2, start_pos: Vec2 }, grabbed: null | [TimedVec2, TimedVec2] }
     | { mode: 'fixed', targetId: string, offset: Vec2 }
-    | { mode: 'follow' };
+    | { mode: 'follow', delay: number, remaining: number, x_offset: number };
 
 export const DefaultWindow = {
     dbg: "",
@@ -74,6 +60,7 @@ export const DefaultWindow = {
     max_size: vec2(5000, 5000),
     min_size: vec2(50, 50),
     inactive_since: 0,
+    just_appear: true,
 }
 
 export const DefaultWindowType = {
@@ -320,6 +307,7 @@ function update_following(w: FloatingWindow, dt: number, now: number, mouse_pos:
         w.target.x = w.target.x - half_size.x - FOLLOWING_OFFSET;
     }
     w.target.y = clamp(w.target.y, - half_screen.y + half_size.y + FOLLOWING_OFFSET , half_screen.y - half_size.y - FOLLOWING_OFFSET);
+    if (w.just_appear) {w.pos = w.target; w.just_appear = false;}
     apply_squishy_movement(w, dt, ACCELERATION * 5, 100.0);
 }
 
@@ -330,7 +318,7 @@ async function tick_windows() {
 
     let now = Date.now();
     let is_resizing = now - latest_resize < LATEST_RESIZE_DT;
-    let mouse_pos = get(MOUSE_POS);
+    let mouse_pos = MOUSE_POS;
     WINDOWS.update((windows) => {
         for (var [id, w] of Object.entries(windows)) {
             let is_sleeping = now - w.inactive_since > SLEEP_DT;
@@ -412,6 +400,7 @@ function resizeMove(e: MouseEvent, w: FloatingWindow) {
         w.size.x = target_width;
         w.pos.x = w.type.resizing.start_pos.x + delta * 0.5;
     }
+
     if (edge >> 1 & 1) {
         let new_width = w.type.resizing.start_size.x - dx;
         let ofx = Math.max(0, w.type.resizing.start_size.x * 0.5 - w.type.resizing.start_pos.x - dx - half_screen.x + SCREEN_MARGIN);
@@ -429,6 +418,7 @@ function resizeMove(e: MouseEvent, w: FloatingWindow) {
         w.size.y = new_height;
         w.pos.y = w.type.resizing.start_pos.y + delta * 0.5;
     }
+
     if (edge >> 3 & 1) {
         let new_height = w.type.resizing.start_size.y - dy;
         let ofy = Math.max(0, w.type.resizing.start_size.y * 0.5 - w.type.resizing.start_pos.y - dy - half_screen.y + SCREEN_MARGIN);
@@ -436,7 +426,6 @@ function resizeMove(e: MouseEvent, w: FloatingWindow) {
         const delta = new_height - w.type.resizing.start_size.y;
         w.size.y = new_height;
         w.pos.y = w.type.resizing.start_pos.y - delta * 0.5;
-
     }
 }
 
@@ -447,12 +436,15 @@ function resizeEnd(w: FloatingWindow) {
     w.inactive_since = Date.now();
 }
 
-
-
 export function openFloating(entry: FloatingWindow) {
     WINDOWS.update((windows) => {
-        if (windows[entry.id]) {
-            shakeById(FLOATING_PREFIX + entry.id)
+        let w = windows[entry.id];
+        if (w != null) {
+            if (w.type.mode == "follow") {
+                w.type.remaining = w.type.delay;
+            } else {
+                shakeById(FLOATING_PREFIX + entry.id)
+            }
         } else {
             let z = entry.type.mode == "floating" ? Object.keys(windows).length : 1000;
             entry.z_index = z;
@@ -460,14 +452,25 @@ export function openFloating(entry: FloatingWindow) {
         }
         return windows;
     });
-
 }
 
 export function closeFloating(id: string){
-    
     WINDOWS.update((windows) => {
         delete windows.id;
         delete windows[id];
+        return windows;
+    });
+}
+
+export function smoothCloseFloating(id: string){
+    WINDOWS.update((windows) => {
+        if (!windows[id]) return windows;
+        if (windows[id].type.mode == "follow") {
+            windows[id].type.remaining -= 1;
+        } else {
+            delete windows.id;
+            delete windows[id];
+        }
         return windows;
     });
 }

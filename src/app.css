@@ -86,6 +86,8 @@
 
 @plugin "daisyui/theme" {
     name: "dracula";
+    color-scheme: "dark";
+    
     --color-base-100: color-mix(in srgb, #0000 90%, var(--color-primary));
     --color-base-200: color-mix(in srgb, #0000 98%, var(--color-primary));
     --color-base-300: color-mix(in srgb, #0000 94%, var(--color-primary));

@@ -160,7 +160,7 @@ export async function oauth_login(token: string ) : Promise<{access_token: strin
 
 export async function checkUid(guid: string): Promise<boolean | null> {
     try {
-        const res = await fetch(`${PUBLIC_API_BASE}/api/auth/account/guid_check?user_guid=${guid.toLocaleLowerCase()}`);
+        const res = await fetch(`${PUBLIC_API_BASE}/api/auth/account/uid_check?user_uid=${guid.toLocaleLowerCase()}`);
         if (!res.ok) return null;
         let j = await res.json();
         return j;

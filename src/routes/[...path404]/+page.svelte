@@ -8,8 +8,9 @@
 </script>
 
 
-
-<CenteredCard>
-    <strong>PAGE NOT FOUND</strong>
-    <Separator></Separator>
-</CenteredCard>
+<div class="flex-grow h-full flex flex-col items-center justify-center">
+  <CenteredCard>
+      <strong>PAGE NOT FOUND</strong>
+      <Separator></Separator>
+  </CenteredCard>
+</div>

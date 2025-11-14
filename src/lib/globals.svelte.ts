@@ -1,15 +1,17 @@
 import { derived, get, writable, type Readable, type Writable } from "svelte/store";
 import { isDesktop } from "./platform.svelte";
-import { localState } from "./util.svelte";
-import type { Vec2 } from "./window/floating.svelte";
+import { localState, vec2, type Vec2 } from "./util.svelte";
 import { get_miniprofile, type MiniProfile } from "./api/profile.svelte";
-import { USER_GUID } from "./token.svelte";
-import { miniprofileThemeToStyle, serializeMiniprofileTheme, type MiniprofileTheme } from "./theme/miniprofile.svelte";
+
 export const TITLEBAR_SIZE = isDesktop() ? 24 : 0;
 export const media_limit = 0.25;
 export type MEDIA_RULE_TYPE = "none" | "catbox"; 
 export const MEDIA_RULE : Writable<MEDIA_RULE_TYPE> = localState("media_rule_setting", "none");
-export const MOUSE_POS : Writable<Vec2> = writable({x: 0, y: 0});
+export let MOUSE_POS : Vec2 = {x: 0, y: 0};
+
+document.documentElement.addEventListener("mousemove", (e : MouseEvent) => {
+    MOUSE_POS = vec2(e.clientX, e.clientY - TITLEBAR_SIZE);
+});
 
 export type UserCache = {
     miniprofile: MiniProfile | null,
@@ -27,7 +29,14 @@ export function get_profile_cache(guid: string) : Readable<UserCache | null> {
     return USER_PROFILE_CACHE[guid];
 }
 
+const USER_PROFILE_CACHE_DELAY = 10000;
+const USER_PROFILE_CACHE_REFRESHES = new Map<string, number>();
+
 export async function refresh_user_miniprofile_cache(guid: string){
+    let last_refresh = USER_PROFILE_CACHE_REFRESHES.get(guid);
+    let now = Date.now();
+    if (last_refresh && now < last_refresh + USER_PROFILE_CACHE_DELAY) return;
+    USER_PROFILE_CACHE_REFRESHES.set(guid, now);
     let v : MiniProfile | null = await get_miniprofile(guid);
     let t = v?.encoded_theme ?? "";
     ALL_USER_PROFILE_CACHE.update(profile_cache => ({

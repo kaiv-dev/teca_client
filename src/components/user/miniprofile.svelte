@@ -3,8 +3,8 @@
     import Icon from "@iconify/svelte";
     import Avatar from "./avatar.svelte";
     import { applyMiniprofileTheme, DEFAULT_MINIPROFILE_THEME, deserializeMiniprofileTheme, miniprofileThemeToStyle, type MiniprofileTheme } from "$lib/theme/miniprofile.svelte";
-    import { tick } from "svelte";
-    import { vec2, type Vec2 } from "$lib/window/floating.svelte";
+    import { onMount, tick } from "svelte";
+    import { vec2, type Vec2 } from "$lib/util.svelte";
   import { get_profile_cache, refresh_user_miniprofile_cache } from "$lib/globals.svelte";
 
     let {
@@ -25,14 +25,14 @@
 
     let style = $state("");
 
-    profile.subscribe(n => {
+    profile.subscribe(async (n) => {
         if (n && n.miniprofile && n.miniprofile.encoded_theme) {
             theme = deserializeMiniprofileTheme(n.miniprofile.encoded_theme);
             style = miniprofileThemeToStyle(theme);
         }
     })
-
     refresh_user_miniprofile_cache(user_id);
+
     // get_miniprofile(user_id).then(
     //     (r) => {
     //         miniprofile = r; 
@@ -53,15 +53,19 @@
     function isVideo(file: string): boolean {
         return /\.(mp4|webm|ogg)$/i.test(file);
     }
-    $effect(() => {
-        (async () => {
-            await tick();
-            if (container_el && on_size_changed) {
-                const rect = container_el.getBoundingClientRect();
-                on_size_changed(vec2(rect.width, rect.height));
-            }
-        })()
-    })
+
+    onMount(() => {
+        if (container_el && on_size_changed) {
+            const observer = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    const { width, height } = entry.contentRect;
+                    on_size_changed(vec2(width, height));
+                }
+            });
+
+            observer.observe(container_el);
+        }
+    });
     let container_el : HTMLElement;
 </script>
 
