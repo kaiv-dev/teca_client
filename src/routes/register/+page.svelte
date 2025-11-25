@@ -149,7 +149,7 @@
           }
         } else {
           setAccess(r);
-          newToast("Welcome to Vesper!", "btn-success");
+          newToast("Welcome to Teca!", "btn-success");
         }
         process_popup = false;
       })()
@@ -185,7 +185,7 @@
   {/if}
   <CenteredCard class="flex flex-col gap-[10px]">
     <div class="brand min-w-[256px]"></div>
-    <!-- <strong class="text-center text-2xl">Welcome to Vesper!</strong> -->
+    <!-- <strong class="text-center text-2xl">Welcome to Teca!</strong> -->
       <Separator/>
       <BorderInput id="username" bind:value={username} autocomplete="username" icon="mingcute:user-3-line" placeholder="Username" ok_state={username_ok} err_hint={username_available == false ? "Username taken" : "Username must be 3–24 characters, letters/numbers/underscores only"}/>
       <BorderInput id="password" bind:value={password} autocomplete="new-password" icon="mingcute:key-2-line" password placeholder="Password" ok_state={password_ok} err_hint="Password must be 8–32 and contain only letters/numbers and -+=$#~@*;:.<>\/|!"/>

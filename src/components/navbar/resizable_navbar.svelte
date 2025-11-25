@@ -58,12 +58,12 @@
 <!-- svelte-ignore css_unused_selector -->
 <style>
 	
-    @property --w {
-        syntax: "<number>";
-        inherits: false;
-        initial-value: 0px;
-    }
-    :global {
+@property --w {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0px;
+}
+:global {
     .sidebar {
         padding: 4px 5px 4px 3px;
         backdrop-filter: blur(8px);
@@ -72,16 +72,18 @@
 		box-sizing: border-box;
 		min-width: 0;
         /* background: color-mix(in srgb, var(--color-primary) 3%, #0000); */
-        background: var(--bg-straight);
-        box-shadow: inset -2px 0px 3px -1px color-mix(in srgb, var(--color-secondary) 30%, #0000);
+        /* background: var(--bg-straight); */
+        /* box-shadow: inset -2px 0px 3px -1px color-mix(in srgb, var(--color-secondary) 30%, #0000); */
         overflow-y:scroll;
         transition-property: width, --w;
         transition-duration: 0.1;
         transition-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
         width: 0;
         /* width: calc(max(var(--w), var(--target))); */
-
 	}
+    .empty {
+        pointer-events: none;
+    }
     /* .sidebar:hover, */
     .sidebar:has(+ div > div > div > div > .resizer:hover),
     .sidebar:has(+ div > div > div > div > .resizer:active)
@@ -109,10 +111,11 @@
         position: absolute;
         width: 6px;
         height: 100%;
+        /* z-index: 100; */
         /* background: red; */
     }
     
-    .visible_handle::after {
+    /* .visible_handle::after {
         content: "";
         position: absolute;
         height: 100%;
@@ -124,22 +127,27 @@
     .visible_handle:hover::after, .visible_handle:active::after {
         translate: 0px 0px;
         box-shadow: inset -2px 0px 3px -1px color-mix(in srgb, var(--color-secondary) 50%, #0000);
+    } */
+:global {
+    
+    .mirror_alloc_provider {
+        --alloc: var(--alloc-outer);
+        background: var(--a);
     }
-    :global {
-        
-        .mirror_alloc_provider {
-            --alloc: var(--alloc-outer);
-            background: var(--a);
-        }
-        .sidebar_mirror_alloc {
-            max-width: var(--alloc);
-            flex: 1 0 auto;
-        }
+    .sidebar_mirror_alloc {
+        max-width: var(--alloc);
+        flex: 1 0 auto;
     }
+}
 
-    .wrapper {
-        position: relative;
-    }
+.wrapper {
+    position: relative;
+}
+
+.navbar_item {
+    pointer-events: auto;
+}
+
 :global {
     .viewport {
         position: relative;
@@ -156,40 +164,43 @@
         display: none;
     }
 }
+
 </style>
 
-<div class="w-full max-vh">
-    <!-- {#if $flex_basis > 0} -->
+<!-- <div class="max-vh shrink w-full" style={"flex-basis: " + $flex_basis + "px"}>
 
-    <!-- --t: {$flex_basis == 0 || $show_on_hover ? "-10" : "0"}px; -->
+</div> -->
 
-    <div class="absolute vh z-30 sidebar flex flex-col gap-1 no-scrollbar" style="
-    --on-hover: {target_width}px;
-    {$show_on_hover ? "" : "width: " + target_width + "px;"}
-    {target_width == 0 ? "display: none;" : ""}
-    "
-    >
-    <NavbarItem link="/0playground" icon="mingcute:bug-line">0playground</NavbarItem>
-        <div class="flex-grow"></div>
-        <NavbarItem link="/calls" icon="tabler:phone">Calls</NavbarItem>
-        <NavbarItem link="/u" icon="mingcute:user-search-line">Users</NavbarItem>
+
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="max-vh shrink w-full flex flex-row relative" style={"flex-basis: " + $flex_basis + "px"}>
+    <div data-tauri-drag-region class="absolute vh z-30 sidebar flex flex-col gap-1 no-scrollbar" style="
+        --on-hover: {target_width}px;
+        {$show_on_hover ? "" : "width: " + target_width + "px;"}
+        {target_width == 0 ? "display: none;" : ""}
+        "
+        >
+        <NavbarItem class="navbar_item" link="/0playground" icon="mingcute:bug-line">0playground</NavbarItem>
+        <div class="flex-grow empty"></div>
+        <NavbarItem class="navbar_item" link="/calls" icon="tabler:phone">Calls</NavbarItem>
+        <NavbarItem class="navbar_item" link="/u" icon="mingcute:user-search-line">Users</NavbarItem>
         {#if $USER_GUID == null}
-        <!-- <NavbarItem link="/us" icon="mingcute:user-search-line">Users</NavbarItem> -->
-        <NavbarItem link="/login" icon="mingcute:user-add-2-line">Login</NavbarItem>
+        <NavbarItem class="navbar_item" link="/login" icon="mingcute:user-add-2-line">Login</NavbarItem>
         {:else}
-        <!-- <NavbarItem link="/us" icon="mingcute:user-search-line">Users</NavbarItem> -->
-        <NavbarItem link="/u/{$USER_GUID}" icon="mingcute:user-3-line">Profile</NavbarItem>
+        <NavbarItem class="navbar_item" link="/u/{$USER_GUID}" icon="mingcute:user-3-line">Profile</NavbarItem>
         {/if}
-        <NavbarItem link="/settings" icon="mingcute:settings-1-line">Settings</NavbarItem>
-        <NavbarItem link="/about" icon="mingcute:information-line">About</NavbarItem>
-        <div class="flex-grow"></div>
+        <NavbarItem class="navbar_item" link="/settings" icon="mingcute:settings-1-line">Settings</NavbarItem>
+        <NavbarItem class="navbar_item" link="/about" icon="mingcute:information-line">About</NavbarItem>
+        <div class="flex-grow empty"></div>
     </div>
-    
+    <div class="absolute right-[-6px] h-full w-[8px] cursor-e-resize z-30" onmousedown={handleMouseDown}></div>
+</div>
+     
 
 
 
 
-    <div class="wrapper flex-grow">
+    <!-- <div class="wrapper flex-grow">
         <div bind:this={viewport} class="viewport w-full">
             <div bind:this={contents} class="contents ">
             <div style="--alloc-outer: {alloc}px" class="flex flex-row overflow-x-clip -z-100 vh mirror_alloc_provider" >
@@ -198,7 +209,6 @@
                     </div>  
                 {/if}
 
-                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="resizer" onmousedown={handleMouseDown}>
                     <div class="resizer_handle {target_width == 0 ? "visible_handle":""}"></div>
                 </div>
@@ -208,6 +218,5 @@
             </div>
         </div>
         <Svrollbar {viewport} {contents} />
-    </div>
-</div> 
+    </div> -->
 

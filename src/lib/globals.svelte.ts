@@ -3,14 +3,13 @@ import { isDesktop } from "./platform.svelte";
 import { localState, vec2, type Vec2 } from "./util.svelte";
 import { get_miniprofile, type MiniProfile } from "./api/profile.svelte";
 
-export const TITLEBAR_SIZE = isDesktop() ? 24 : 0;
 export const media_limit = 0.25;
 export type MEDIA_RULE_TYPE = "none" | "catbox"; 
 export const MEDIA_RULE : Writable<MEDIA_RULE_TYPE> = localState("media_rule_setting", "none");
 export let MOUSE_POS : Vec2 = {x: 0, y: 0};
 
 document.documentElement.addEventListener("mousemove", (e : MouseEvent) => {
-    MOUSE_POS = vec2(e.clientX, e.clientY - TITLEBAR_SIZE);
+    MOUSE_POS = vec2(e.clientX, e.clientY);
 });
 
 export type UserCache = {

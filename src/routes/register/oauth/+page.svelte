@@ -117,7 +117,7 @@
           }
         } else {
           setAccess(r);
-          newToast("Welcome to Vesper!", "btn-success");
+          newToast("Welcome to Teca!", "btn-success");
           goto("/")
         }
         process_popup = false;

@@ -1,15 +1,18 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    type Props = {
-        link: string;
-        icon: string;
-    };
-
-    let { link, icon }: Props = $props(); 
+    let {
+        link,
+        icon,
+        class : extra_class = ""
+    } : {
+        link: string,
+        icon: string,
+        class?: string
+    } = $props(); 
     import { page } from '$app/state';
 </script>
 <!-- TODO: ACTIVE STYLE -->
-<a href={link} class={`relative btn btn-primary gap-2 flex flex-row navbar_button ${page.url.pathname.startsWith(link) ? "active_navbar_button" : "btn-ghost"}`}>
+<a href={link} class={`relative btn btn-primary gap-2 flex flex-row navbar_button ${page.url.pathname.startsWith(link) ? "active_navbar_button" : "btn-ghost"} ${extra_class}`}>
     <Icon icon={icon} height=24px class="min-w-[24px] shd"/>
     <slot></slot>
 </a>

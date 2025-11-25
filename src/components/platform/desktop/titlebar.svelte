@@ -1,14 +1,64 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
+    import Icon from "@iconify/svelte";
+    import { onMount, onDestroy } from "svelte";
     import { getCurrentWindow } from '@tauri-apps/api/window';
+
+    let handle: HTMLElement;
+    let titlebar: HTMLElement;
+    let controls: HTMLElement;
+
+    let hovering = false;
+
     const appWindow = getCurrentWindow();
-    function unfocus(e : any) {
-        try {e.target?.blur();} catch {}
+    function unfocus(e: any) {
+        try { e.target?.blur(); } catch {}
     }
+
+    let lastMouseDownTime = 0;
+
+    onMount(() => {
+        function onMove(e: MouseEvent) {
+            if (!handle) return;
+            const rect = handle.getBoundingClientRect();
+            const inside =
+                e.clientX >= rect.left &&
+                e.clientX <= rect.right &&
+                e.clientY >= rect.top &&
+                e.clientY <= rect.bottom;
+            if (inside) {
+                hovering = true;
+            } else {
+                hovering = false;
+            }
+        }
+
+        function onWindowLeave(e: MouseEvent) {
+            hovering = false;
+        }
+
+        // todo!: fix with native events
+        /*window.addEventListener('mousedown', (e) => {
+            lastMouseDownTime = Date.now();
+        });
+
+        window.addEventListener('mouseout', (e) => {
+            if (e.relatedTarget === null) {
+                const now = Date.now();
+                const timeSinceMouseDown = now - lastMouseDownTime;
+                if (timeSinceMouseDown > 10) {
+                    onWindowLeave(e);
+                }
+            }
+        });*/
+
+        window.addEventListener("mousemove", onMove);
+    });
 </script>
 
-<div class="titlebar">
-    <div  data-tauri-drag-region class="controls w-full h-[24px] bg-[#0002] flex flex-row items-center justify-end">
+<div id="titlebar" bind:this={titlebar} class:hovering={hovering}>
+    <div data-tauri-drag-region class="drag"></div>
+    <div class="titlebar_handle" bind:this={handle}></div>
+    <div class="controls w-full h-full flex flex-row items-center justify-end" bind:this={controls}>
         <button class="no-focus unselectable" tabindex="-1" id="titlebar-minimize" on:click={(e) => {unfocus(e); appWindow.minimize()}}> 
             <Icon icon="fluent:minimize-16-filled" height="16px"></Icon>
         </button>
@@ -21,35 +71,76 @@
         </button>
     </div>
 </div>
+
 <style>
 :global{
-    :root {
-        --titlebar-size: 24px;
+    [data-dbg-hover-region] .titlebar_handle {
+        background-color: red;
     }
 }
-.titlebar {
-    height: var(--titlebar-size);
-    z-index: 1000;
+
+.drag {
+    height: 32px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    pointer-events: auto;
+}
+
+.titlebar_handle {
+    pointer-events: none;
+    height: 12px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    z-index: 11;
+    width: 100%;
+}
+
+
+#titlebar {
+    flex-basis: 0px;
+    max-height: 20px;
     user-select: none;
-    display: grid;
-    grid-template-columns: auto max-content;
     top: 0;
     left: 0;
     right: 0;
-    /* background: #080808FF; */
-    background-image: var(--bg-200);
-    backdrop-filter: blur(4px);
-    /* box-shadow: inset 0px 3px 6px color-mix(in srgb, var(--color-secondary) 40%, #0000); */
-    /* box-shadow: inset 0px 1px 4px 3px color-mix(in srgb, var(--color-secondary) 60%, #000); */
+    transition: flex-basis .2s;
 }
 
-.titlebar > .controls {
-    display: flex;
+#titlebar.hovering .titlebar_handle {
+    height: 20px;
 }
 
-.titlebar button {
+#titlebar.hovering {
+    flex-basis: 20px;
+}
+
+.controls {
+    z-index: 13;
+    top: -40px;
+    right: 0;
+    position: absolute;
+    height: 20px;
+    width: fit-content;
+    transition: top .2s;
+}
+
+#titlebar.hovering .controls {
+    top: 0;
+    z-index: 13;
+    right: 0;
+    position: absolute;
+    height: 20px;
+    width: fit-content;
+    transition: top .2s;
+}
+
+button {
     width: 30px;
-    height: var(--titlebar-size);
+    height: 100%;
     appearance: none;
     padding: 0;
     margin: 0;
@@ -59,12 +150,13 @@
     align-items: center;
     background-color: transparent;
 }
-.titlebar button:hover {
+
+button:hover {
     background: #AAA2;
-    color: #FFF;
-}
-.titlebar #titlebar-close:hover {
-    background: var(--color-error);
+    color: var(--color-base-content);
 }
 
+#titlebar-close:hover {
+    background: var(--color-error);
+}
 </style>

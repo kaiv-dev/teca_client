@@ -1,4 +1,4 @@
-import { MOUSE_POS, TITLEBAR_SIZE } from "$lib/globals.svelte";
+import { MOUSE_POS } from "$lib/globals.svelte";
 import { add, clamp, e2pos, is_zero, length_squared, length, localState, mul, normalize_or_zero, shakeById, sub, vec2, type Vec2 } from "$lib/util.svelte";
 import { writable, type Writable } from "svelte/store";
 
@@ -7,13 +7,13 @@ export const FLOATING_CONTAINER_ID = "floating_container";
 
 
 
-export let half_screen = mul(vec2(window.innerWidth, (window.innerHeight - TITLEBAR_SIZE)), 0.5);
+export let half_screen = mul(vec2(window.innerWidth, (window.innerHeight)), 0.5);
 
 
 let latest_resize = Date.now();
 const LATEST_RESIZE_DT = 100;
 window.addEventListener('resize', () => {
-    let new_screen = vec2(window.innerWidth, window.innerHeight - TITLEBAR_SIZE);
+    let new_screen = vec2(window.innerWidth, window.innerHeight);
     half_screen = mul(new_screen, 0.5);
     latest_resize = Date.now();
     WINDOWS.update((windows) => {

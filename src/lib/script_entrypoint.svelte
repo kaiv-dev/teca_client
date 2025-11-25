@@ -8,7 +8,7 @@ import { afterNavigate } from "$app/navigation";
 import { page } from "$app/state";
 import { latest_page, page_not_found } from "./path_watcher.svelte";
 import { get } from "svelte/store";
-import { MOUSE_POS, TITLEBAR_SIZE } from "./globals.svelte";
+import { MOUSE_POS } from "./globals.svelte";
 
 // import { TURNSTILE_SITE_KEY } from "$env/static/public";
 onMount(() => {

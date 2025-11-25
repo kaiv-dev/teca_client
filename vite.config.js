@@ -19,12 +19,12 @@ export default defineConfig(async () => ({
     host: host || false,
     proxy: {
       '/api/calls' : {
-        target: 'wss://vesper.kaiv.space',
+        target: 'wss://teca.kaiv.dev',
         secure: true,
         changeOrigin: true
       },
 			'/api': {
-				target: 'https://vesper.kaiv.space',
+				target: 'https://teca.kaiv.dev',
         secure: true,
 				changeOrigin: true,
 			},

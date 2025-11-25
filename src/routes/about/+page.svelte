@@ -5,7 +5,7 @@
 </script>
 <div class="flex-grow h-full flex flex-col items-center justify-center">
   <CenteredCard>
-      <strong>Vesper currently in alpha</strong>
+      <strong>Teca currently in alpha</strong>
       <Separator></Separator>
       so, nothing here
   </CenteredCard>
