@@ -1,8 +1,8 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    import ProgressiveImage from "../../../components/content/progressive_image.svelte";
+    import ProgressiveImage from "../$lib/../components/content/progressive_image.svelte";
     import { PUBLIC_API_BASE } from "$env/static/public";
-    import Button from "../../../components/content/button.svelte";
+    import Button from "../$lib/../components/content/button.svelte";
     import { formatTimestamp, timeAgo } from "$lib/util.svelte";
     let nickname = $state("Kaiv");
     let last_seen = Date.now();

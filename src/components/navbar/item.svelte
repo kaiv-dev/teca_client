@@ -12,7 +12,11 @@
     import { page } from '$app/state';
 </script>
 <!-- TODO: ACTIVE STYLE -->
-<a href={link} class={`relative btn btn-primary gap-2 flex flex-row navbar_button ${page.url.pathname.startsWith(link) ? "active_navbar_button" : "btn-ghost"} ${extra_class}`}>
+<a href={link} class={
+        `relative btn btn-primary gap-2 flex flex-row navbar_button 
+        ${page.url.pathname.startsWith(link) ? "active_navbar_button" : "btn-ghost"}
+        ${extra_class}`
+    }>
     <Icon icon={icon} height=24px class="min-w-[24px] shd"/>
     <slot></slot>
 </a>
@@ -37,49 +41,38 @@
         justify-content: start;
         overflow: hidden;
         border: 0;
-    }
-
-
-    [data-neo="true"] .navbar_button  {
-        /* border: 2px solid transparent; */
-        /* padding: 2px; */
-        padding: 2px 2px 2px 8px;
         border-radius: var(--radius-field);
-        color: color-mix(in srgb, var(--color-primary) var(--tint-200), #FFF);
-        transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        transition-property: transform;
-        transition-duration: 0.15s;
+        color: var(--color-primary);
+        /* color: color-mix(in srgb, var(--color-primary) var(--tint-200), #FFF); */
+        /* transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); */
+        transition-property: box-shadow, color;
+        transition-duration: 0.3s;
         background: none;
     }
-    
-    [data-neo="true"] path {
-        box-shadow: 0px 0px 4px 2px color-mix(in srgb, var(--color-secondary) 100%, #0000);
-    }
 
-    [data-neo="true"] .navbar_button:hover, [data-neo="true"] .active_navbar_button {
-        color: #FFF;
-        color: var(--tinted-acc-100);
-        /* border: 2px solid var(--tinted-sec-100); */
-        box-shadow: inset 0px 0px 4px 2px color-mix(in srgb, var(--color-secondary) 20%, #0000);
-        background-origin: border-box;
-        background-image: var(--bg-100);
-    }
-
-    .active_navbar_button:hover, .active_navbar_button:active {
-        border: 0;
-    }
-    [data-neo="true"] .active_navbar_button:hover, [data-neo="true"] .navbar_button:active, [data-neo="true"] .active_navbar_button:active {
-        color: #FFF;
-        /* border: 2px solid var(--tinted-sec-100); */
-        box-shadow: inset 0px 0px 4px 2px color-mix(in srgb, var(--color-secondary) 34%, #0000);
-        background-image: var(--bg-200);
+    .navbar_button:hover, .active_navbar_button {
+        color: var(--color-primary);
+        box-shadow:
+            0px 0px 3px 3px var(--color-soft-shadow),
+            inset 0px 0px 3px 3px transparent
+            ;
+        border: 2px solid #AAAAAA0F;
+        padding-left: 6px;
     }
     .navbar_button:active, .active_navbar_button:active {
         border: 0;
+        color: color-mix(in srgb, var(--color-primary) var(--tint-200), #444);
+        box-shadow:
+            0px 0px 3px 3px transparent,
+            inset 0px 0px 3px 3px var(--color-soft-shadow)
+            ;
     }
-    [data-neo="true"] .navbar_button:active, [data-neo="true"] .active_navbar_button:active {
-        translate: unset;
-        transform: scale(0.97);
+
+    .navbar_button:focus, .active_navbar_button:focus {
+        outline: 0;
+        border: 2px solid #AAAAAA0F;
+        padding-left: 6px;
+        /* color: var(--color-base-content); */
     }
 }
 </style>

@@ -3,10 +3,10 @@
     import Icon from "@iconify/svelte";
     import { get, type Writable } from "svelte/store";
     import { Svrollbar, Svroller } from "svrollbar";
-    import Channel from "../../components/calls/channel.svelte";
-    import Call from "../../components/calls/call.svelte";
-    import Button from "../../components/content/button.svelte";
-    import Scrollable from "../../components/containers/scrollable.svelte";
+    import Channel from "$lib/../components/calls/channel.svelte";
+    import Call from "$lib/../components/calls/call.svelte";
+    import Button from "$lib/../components/content/button.svelte";
+    import Scrollable from "$lib/../components/containers/scrollable.svelte";
     import { calls_socket, get_rooms, init_calls, type PublicRoomRecord } from "$lib/api/calls.svelte";
     import { ACCESS_TOKEN } from "$lib/token.svelte";
     import { newToast } from "$lib/toast.svelte";

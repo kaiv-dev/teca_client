@@ -1,11 +1,11 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import CenteredCard from "../../../components/containers/centered_card.svelte";
-  import BorderInput from "../../../components/content/border_input.svelte";
-  import BorderCheckbox from "../../../components/content/border_checkbox.svelte";
-  import Popup from "../../../components/popup.svelte";
-  import Turnstile from "../../../components/content/turnstile.svelte";
-  import Separator from "../../../components/content/separator.svelte";
+  import CenteredCard from "../$lib/../components/containers/centered_card.svelte";
+  import BorderInput from "../$lib/../components/content/border_input.svelte";
+  import BorderCheckbox from "../$lib/../components/content/border_checkbox.svelte";
+  import Popup from "../$lib/../components/popup.svelte";
+  import Turnstile from "../$lib/../components/content/turnstile.svelte";
+  import Separator from "../$lib/../components/content/separator.svelte";
 
   let temp_token = sessionStorage.getItem("temp_register_token");
   if (temp_token == null) {

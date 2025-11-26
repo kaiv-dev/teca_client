@@ -1,7 +1,7 @@
 <script>
   import { page_not_found } from "$lib/path_watcher.svelte";
-  import CenteredCard from "../../components/containers/centered_card.svelte";
-  import Separator from "../../components/content/separator.svelte";
+  import CenteredCard from "$lib/../components/containers/centered_card.svelte";
+  import Separator from "$lib/../components/content/separator.svelte";
   import { onDestroy } from 'svelte';
   page_not_found.set(true);
   onDestroy(() => page_not_found.set(false));

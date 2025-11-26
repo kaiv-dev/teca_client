@@ -1,17 +1,18 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import CenteredCard from "../../components/containers/centered_card.svelte";
-  import BorderInput from "../../components/content/border_input.svelte";
-  import LabelSeparator from "../../components/content/label_separator.svelte";
-  import Separator from "../../components/content/separator.svelte";
-  import Turnstile from "../../components/content/turnstile.svelte";
-  import Popup from "../../components/popup.svelte";
+  import CenteredCard from "$lib/../components/containers/centered_card.svelte";
+  import BorderInput from "$lib/../components/content/border_input.svelte";
+  import LabelSeparator from "$lib/../components/content/label_separator.svelte";
+  import Separator from "$lib/../components/content/separator.svelte";
+  import Turnstile from "$lib/../components/content/turnstile.svelte";
+  import Popup from "$lib/../components/popup.svelte";
   import { setAccess } from "$lib/token.svelte";
   import { newToast } from "$lib/toast.svelte";
   import { login, oauth_login, STATE_TOKEN_KEY } from "$lib/api/auth.svelte";
   import { shakeById } from "$lib/util.svelte";
   import { PUBLIC_API_BASE } from "$env/static/public";
   import { goto } from "$app/navigation";
+  import Noise from "../../components/bg/noise.svelte";
 
   let popup_callback : null | ((token: string) => void) = $state(null);
   let process_popup : boolean = $state(false);
@@ -82,7 +83,8 @@
 
 
 
-<div id="content_container" class="flex-grow flex justify-center">
+<div class="flex-grow flex justify-center main_content overflow-clip main_content_shadow">
+  <Noise/>
   {#if popup_callback}
   <Popup on_deny={() => {popup_callback = null}}>
     <strong class="text-center">To continue pass the challenge:</strong>

@@ -1,6 +1,6 @@
 <script>
-  import CenteredCard from "../../components/containers/centered_card.svelte";
-  import Separator from "../../components/content/separator.svelte";
+  import CenteredCard from "$lib/../components/containers/centered_card.svelte";
+  import Separator from "$lib/../components/content/separator.svelte";
 
 </script>
 <div class="flex-grow h-full flex flex-col items-center justify-center">

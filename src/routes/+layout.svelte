@@ -28,14 +28,13 @@
 	import ToastContainer from "../components/toast/toast_container.svelte";
   	import LoadingScreen from "../components/loading_screen.svelte";
   	import WindowProvider from '../components/window/provider.svelte';
-  import Resizable from '../components/containers/resizable.svelte';
+  	import Resizable from '../components/containers/resizable.svelte';
 </script>
 {#if hideRootLayout}
 {@render children()}
 {:else}
 <ScriptEntrypoint/>
 <WindowProvider/>
-<BackgroundShaderNoise/>
 <LoadingScreen/>
 <ToastContainer />
 <div id="main_container" class="relative flex flex-row h-screen w-screen">
@@ -45,23 +44,15 @@
 		{#if isDesktop()}
 			<DesktopTitlebar/>
 		{/if}
-		<div class="w-full h-full relative p-1 z-10 grow">
-			<div class="w-full h-full main_content flex">
-				{@render children()}
-			</div>
+		<div class="w-full h-full relative z-10 grow">
+			{@render children()}
 		</div>
 	</div>
 </div>
 {/if}
 <style>
 #main_container {
-	background-color: var(--color-background-2);
-}
-.main_content {
-	background-color: var(--color-background-1);
-	border-radius: var(--radius-box);
-	/* box-shadow: inset 0px 0px 3px 3px color-mix(in srgb, var(--color-secondary) 40%, #0000); */
-	box-shadow: inset 0px 0px 2px 2px var(--color-shadow);
+	background-color: var(--tinted-sec-100o);
 }
 
 

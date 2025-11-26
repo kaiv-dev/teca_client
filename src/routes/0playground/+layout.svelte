@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Provider from '../../components/window/provider.svelte';
+  import Provider from '$lib/../components/window/provider.svelte';
 
 	let { children } = $props();
 </script>
