@@ -2,7 +2,7 @@
   import { get_all_guids } from "$lib/api/profile.svelte";
 
 
-    import Miniprofile from "../../components/user/miniprofile.svelte";
+    import Miniprofile from "$lib/../components/user/miniprofile.svelte";
 
     let guids : string[] = $state([]);
 

@@ -119,12 +119,27 @@ void main() {
         currentTime = (Date.now() - startTime) / 1000;
         requestAnimationFrame(update_time)
     }
+    let { 
+        class : extra_class = "",
+    } : {
+        class?: String,
+    } = $props();
     let primary_color : [number, number, number] = [1, 1, 1];
     let color = $state(primary_color);
     update_time()
 </script>
 
-<div class="h-full w-full top-0 left-0 fixed -z-100">
+<style>
+    .mask {
+        background: linear-gradient(115deg in srgb,
+            color-mix(in oklch, var(--color-primary) 15%, transparent), 
+            color-mix(in oklch, var(--color-secondary) 15%, transparent)
+        );
+        backdrop-filter: blur(3px);
+    }
+</style>
+
+<div class={`h-full w-full top-0 left-0 absolute -z-100 overflow-clip ${extra_class}`}>
     <WebGlShader
         code={shaderCode}
         parameters={[
@@ -137,5 +152,5 @@ void main() {
     >
         <div class="fallback">WebGL not supported in this environment.</div>
     </WebGlShader>
-    <!-- <div class="absolute top-0 h-full w-full glass"></div> -->
+    <div class="absolute top-0 h-full w-full mask"></div>
 </div>

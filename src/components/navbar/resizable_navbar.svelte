@@ -6,7 +6,7 @@
     import { USER_GUID } from "$lib/token.svelte";
     // todo!
     let show_on_hover = writable(false) //localState("sidebar_show_collapsed_on_hover", false);
-    let states = [0, 48, 200];
+    let states = [0, 52, 200];
     let target_width = $state(states[1]);
     let alloc = $state(states[1]);
     // svelte-ignore state_referenced_locally
@@ -51,11 +51,8 @@
 		window.addEventListener('mousemove', resize);
 		window.addEventListener('mouseup', stop);
 	}
-    let viewport
-    let contents
 </script>
 
-<!-- svelte-ignore css_unused_selector -->
 <style>
 	
 @property --w {
@@ -63,117 +60,35 @@
     inherits: false;
     initial-value: 0px;
 }
-:global {
-    .sidebar {
-        padding: 4px 5px 4px 3px;
-        backdrop-filter: blur(8px);
-        border-radius: 0 var(--radius-box) var(--radius-box) 0;
-		position: absolute;
-		box-sizing: border-box;
-		min-width: 0;
-        /* background: color-mix(in srgb, var(--color-primary) 3%, #0000); */
-        /* background: var(--bg-straight); */
-        /* box-shadow: inset -2px 0px 3px -1px color-mix(in srgb, var(--color-secondary) 30%, #0000); */
-        overflow-y:scroll;
-        transition-property: width, --w;
-        transition-duration: 0.1;
-        transition-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
-        width: 0;
-        /* width: calc(max(var(--w), var(--target))); */
-	}
-    .empty {
-        pointer-events: none;
-    }
-    /* .sidebar:hover, */
-    .sidebar:has(+ div > div > div > div > .resizer:hover),
-    .sidebar:has(+ div > div > div > div > .resizer:active)
-    {
-        box-shadow: inset -2px 0px 3px -1px color-mix(in srgb, var(--color-secondary) 50%, #0000);
-        flex-basis: 2px;
-        width: var(--on-hover);
-        translate: 0px 0px;
-    }
-    }
-	.resizer {
-		flex-basis: 0px;
-		position: relative;
-        cursor: ew-resize;
-        z-index: 100;
-        /* border-left: 2px solid #33364240; */
-        /* box-shadow: var(--box-shadow); */
-        /* box-shadow: -4px 0 4px color-mix(in srgb, var(--color-secondary) 10%, #0000); */
-		box-sizing: border-box;
-        flex: -1 -1 auto;
 
-        /* translate: var(--t) 0px; */
-	}
-    .resizer_handle {
-        position: absolute;
-        width: 6px;
-        height: 100%;
-        /* z-index: 100; */
-        /* background: red; */
-    }
-    
-    /* .visible_handle::after {
-        content: "";
-        position: absolute;
-        height: 100%;
-        width: 6px;
-        translate: -6px 0px;
-        background: var(--bg-straight);
-        transition: translate linear 50ms;
-    }
-    .visible_handle:hover::after, .visible_handle:active::after {
-        translate: 0px 0px;
-        box-shadow: inset -2px 0px 3px -1px color-mix(in srgb, var(--color-secondary) 50%, #0000);
-    } */
-:global {
-    
-    .mirror_alloc_provider {
-        --alloc: var(--alloc-outer);
-        background: var(--a);
-    }
-    .sidebar_mirror_alloc {
-        max-width: var(--alloc);
-        flex: 1 0 auto;
-    }
+.sidebar {
+    padding: 4px 5px 4px 3px;
+    backdrop-filter: blur(8px);
+    border-radius: 0 var(--radius-box) var(--radius-box) 0;
+    position: absolute;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow-y:scroll;
+    transition-property: width;
+    transition-duration: 0.1;
+    transition-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+    width: 0;
+    gap: 7px;
+    padding-left: 8px;
 }
 
-.wrapper {
-    position: relative;
-}
+/* .sidebar_container {
+    transition-property: flex-basis;
+    transition-duration: 0.1;
+    transition-timing-function: cubic-bezier(0.5, 1, 0.89, 1);
+} */
 
-.navbar_item {
-    pointer-events: auto;
-}
 
-:global {
-    .viewport {
-        position: relative;
-        overflow: scroll;
-        box-sizing: border-box;
-
-        /* hide scrollbar */
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-    .viewport::-webkit-scrollbar {
-        /* hide scrollbar */
-        display: none;
-    }
-}
 
 </style>
 
-<!-- <div class="max-vh shrink w-full" style={"flex-basis: " + $flex_basis + "px"}>
-
-</div> -->
-
-
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="max-vh shrink w-full flex flex-row relative" style={"flex-basis: " + $flex_basis + "px"}>
+<div class="max-vh shrink w-full flex flex-row relative sidebar_container" style={"flex-basis: " + $flex_basis + "px"}>
     <div data-tauri-drag-region class="absolute vh z-30 sidebar flex flex-col gap-1 no-scrollbar" style="
         --on-hover: {target_width}px;
         {$show_on_hover ? "" : "width: " + target_width + "px;"}
@@ -181,7 +96,7 @@
         "
         >
         <NavbarItem class="navbar_item" link="/0playground" icon="mingcute:bug-line">0playground</NavbarItem>
-        <div class="flex-grow empty"></div>
+        <div class="flex-grow pass-trough"></div>
         <NavbarItem class="navbar_item" link="/calls" icon="tabler:phone">Calls</NavbarItem>
         <NavbarItem class="navbar_item" link="/u" icon="mingcute:user-search-line">Users</NavbarItem>
         {#if $USER_GUID == null}
@@ -190,33 +105,11 @@
         <NavbarItem class="navbar_item" link="/u/{$USER_GUID}" icon="mingcute:user-3-line">Profile</NavbarItem>
         {/if}
         <NavbarItem class="navbar_item" link="/settings" icon="mingcute:settings-1-line">Settings</NavbarItem>
+        <NavbarItem class="navbar_item" link="/new_settings" icon="mingcute:settings-1-line">Settings new</NavbarItem>
         <NavbarItem class="navbar_item" link="/about" icon="mingcute:information-line">About</NavbarItem>
-        <div class="flex-grow empty"></div>
+        <div class="flex-grow pass-trough"></div>
     </div>
     <div class="absolute right-[-6px] h-full w-[8px] cursor-e-resize z-30" onmousedown={handleMouseDown}></div>
 </div>
-     
 
-
-
-
-    <!-- <div class="wrapper flex-grow">
-        <div bind:this={viewport} class="viewport w-full">
-            <div bind:this={contents} class="contents ">
-            <div style="--alloc-outer: {alloc}px" class="flex flex-row overflow-x-clip -z-100 vh mirror_alloc_provider" >
-                {#if target_width > 0}
-                    <div class="max-vh w-[30px]" style="flex-basis: {alloc}px">
-                    </div>  
-                {/if}
-
-                <div class="resizer" onmousedown={handleMouseDown}>
-                    <div class="resizer_handle {target_width == 0 ? "visible_handle":""}"></div>
-                </div>
-                <slot />
-
-            </div>
-            </div>
-        </div>
-        <Svrollbar {viewport} {contents} />
-    </div> -->
 

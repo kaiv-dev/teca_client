@@ -1,11 +1,11 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import CenteredCard from "../../components/containers/centered_card.svelte";
-  import BorderInput from "../../components/content/border_input.svelte";
-  import BorderCheckbox from "../../components/content/border_checkbox.svelte";
-  import Popup from "../../components/popup.svelte";
-  import Turnstile from "../../components/content/turnstile.svelte";
-  import Separator from "../../components/content/separator.svelte";
+  import CenteredCard from "$lib/../components/containers/centered_card.svelte";
+  import BorderInput from "$lib/../components/content/border_input.svelte";
+  import BorderCheckbox from "$lib/../components/content/border_checkbox.svelte";
+  import Popup from "$lib/../components/popup.svelte";
+  import Turnstile from "$lib/../components/content/turnstile.svelte";
+  import Separator from "$lib/../components/content/separator.svelte";
 
   let username = $state("");
   let username_ok : null | boolean = $state(null);
@@ -159,16 +159,16 @@
   import { newToast } from "$lib/toast.svelte";
   import { checkUid, determineRegisterError, register, requestRegisterCode } from "$lib/api/auth.svelte";
   import { onDestroy } from "svelte";
-  import Item from "../../components/navbar/item.svelte";
+  import Item from "$lib/../components/navbar/item.svelte";
   import { setAccess } from "$lib/token.svelte";
   import { EMAIL_RE, PASSWORD_RE, USERNAME_RE } from "$lib/regexps.svelte";
   import { shakeById } from "$lib/util.svelte";
+  import Noise from "../../components/bg/noise.svelte";
 </script>
 
 
 
-
-<div id="content_container" class="flex-grow flex justify-center">
+<div class="flex-grow flex justify-center main_container">
   {#if popup_callback}
   <Popup on_deny={() => {popup_callback = null}}>
     <strong class="text-center">To continue pass the challenge:</strong>
