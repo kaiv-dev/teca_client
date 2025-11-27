@@ -28,7 +28,7 @@
 	import ToastContainer from "../components/toast/toast_container.svelte";
   	import LoadingScreen from "../components/loading_screen.svelte";
   	import WindowProvider from '../components/window/provider.svelte';
-  	import Resizable from '../components/containers/resizable.svelte';
+  import Bg from '../components/bg/bg.svelte';
 </script>
 {#if hideRootLayout}
 {@render children()}
@@ -37,16 +37,20 @@
 <WindowProvider/>
 <LoadingScreen/>
 <ToastContainer />
-<div id="main_container" class="relative flex flex-row h-screen w-screen">
-	<!-- <div class="h-full" style="flex-basis: 200px"></div> -->
+<div id="main_container" class="dark-picker relative flex flex-row h-screen w-screen max-h-screen max-w-screen">
 	<ResizableNavbar/>
-	<div class="grow h-full relative flex flex-col">
+	<div class="grow h-full relative flex flex-col max-h-full">
 		{#if isDesktop()}
 			<DesktopTitlebar/>
 		{/if}
-		<div class="w-full h-full relative z-10 grow">
-			{@render children()}
-		</div>
+        <div class="grow relative">
+            <div class="w-full z-10 absolute top-0 bottom-0">
+                <div class="main_content main_content_shadow overflow-clip">
+                    <Bg/>
+                    {@render children()}
+                </div>
+            </div>
+        </div>
 	</div>
 </div>
 {/if}
@@ -54,6 +58,4 @@
 #main_container {
 	background-color: var(--tinted-sec-100o);
 }
-
-
 </style>

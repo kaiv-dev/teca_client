@@ -1,7 +1,26 @@
 <script lang="ts">
-  let {class : extra_class = "", checked = $bindable()} : {class? : string, checked : boolean} = $props();
+    let {
+        class : extra_class = "",
+        label = null,
+        checked = $bindable()
+    } : {
+        class? : string,
+        label? : string | null,
+        checked : boolean
+    } = $props();
 </script>
-<input bind:checked={checked} type="checkbox" class={`checkbox checkbox-border ${extra_class}`} />
+
+{#if label}
+    <div id="tos" class="flex items-center gap-2">
+        <label class="cursor-pointer flex items-center gap-2">
+            <input bind:checked={checked} type="checkbox" class={`checkbox checkbox-border ${extra_class}`} />
+            {label}
+       </label>
+    </div>
+{:else}
+    <input bind:checked={checked} type="checkbox" class={`checkbox checkbox-border ${extra_class}`} />
+{/if}
+
 <style>
 :global{
 [data-neo="true"] .checkbox-border {

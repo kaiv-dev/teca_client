@@ -108,7 +108,7 @@
 
 <div 
 style=""
-class="flex-grow flex justify-center relative p-2"
+class="flex-grow flex justify-center relative vh min-w-[900px] p-2"
 >
 
 {#if popup}
@@ -122,7 +122,7 @@ class="flex-grow flex justify-center relative p-2"
 {/if}
 
 <div class="w-full flex justify-center relative">
-    <div class="w-full flex flex-col h-fit] p-2 card-base card-100 card-100-border gap-2">
+    <div class="w-full flex flex-col h-fit max-w-[900px] p-2 card-base card-100 card-100-border gap-2">
         <CollapseSetting icon="mingcute:paint-brush-ai-line" open>
             <!-- TODO: ACTIVE STYLE -->
             <div slot="title">Theme</div>

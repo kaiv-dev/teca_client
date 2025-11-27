@@ -105,7 +105,7 @@
         <NavbarItem class="navbar_item" link="/u/{$USER_GUID}" icon="mingcute:user-3-line">Profile</NavbarItem>
         {/if}
         <NavbarItem class="navbar_item" link="/settings" icon="mingcute:settings-1-line">Settings</NavbarItem>
-        <NavbarItem class="navbar_item" link="/new_settings" icon="mingcute:settings-1-line">Settings new</NavbarItem>
+        <NavbarItem class="navbar_item" link="/old_settings" icon="mingcute:settings-1-line">Settings old</NavbarItem>
         <NavbarItem class="navbar_item" link="/about" icon="mingcute:information-line">About</NavbarItem>
         <div class="flex-grow pass-trough"></div>
     </div>

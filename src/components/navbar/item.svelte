@@ -62,6 +62,7 @@
     .navbar_button:active, .active_navbar_button:active {
         border: 0;
         color: color-mix(in srgb, var(--color-primary) var(--tint-200), #444);
+        background-color: var(--tinted-sec-200o);
         box-shadow:
             0px 0px 3px 3px transparent,
             inset 0px 0px 3px 3px var(--color-soft-shadow)

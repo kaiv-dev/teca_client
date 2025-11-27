@@ -1,7 +1,7 @@
 <script lang="ts">
     import { setDefaultTheme, setNonOverrideTheme, themeToData, themeToStyle, type AppTheme } from "$lib/theme/app.svelte";
     import { prettify } from "$lib/util.svelte";
-  import Button from "./button.svelte";
+    import Button from "./button.svelte";
     let {
         theme,
         onclick,
@@ -19,18 +19,36 @@
     let theme_data = typeof theme == "string" ? theme : theme.theme;
     let theme_name = typeof theme == "string" ? prettify(theme) : theme.name;
     let style = typeof theme == "string" ? "" : themeToStyle(theme.theme);
+    console.log(style)
 </script>
+
+<style>
+.preview:hover {
+    transition-duration: 0.25s;
+    box-shadow:
+        inset 0px 0px 3px 3px transparent
+        ;
+}
+
+.preview, .preview:active {
+    transition-property: box-shadow;
+    transition-duration: 0.25s;
+    box-shadow:
+            inset 0px 0px 3px 3px var(--color-soft-shadow)
+            ;
+}
+</style>
 
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="w-full h-fit flex gap-2 flex-row-reverse items-center justify-between p-2 pl-3 font-bold card-base card-100 card-100-border theme-calc text-md cursor-pointer " 
+<div class="h-fit flex gap-2 flex-row-reverse items-center justify-between p-2 pl-3 font-bold card-base card-100 card-100-border theme-calc text-md cursor-pointer preview min-w-0" 
     data-theme={typeof theme == "string" ? theme : ""}
     data-neo={neo}
     style={style}
     onclick={onclick}>
     
-    <div class="grid grid-cols-3 h-full gap-0.5 min-w-[64px]">
+    <div class="grid grid-cols-3 h-full gap-0.5 min-w-0">
         <div data-tip="primary" class="rounded-full h-6 w-6 tooltip bg-[var(--color-primary)]"></div>
         <div data-tip="secondary" class="rounded-full h-6 w-6 tooltip bg-[var(--color-secondary)]"></div>
         <div data-tip="accent" class="rounded-full h-6 w-6 tooltip bg-[var(--color-accent)]"></div>
@@ -38,8 +56,8 @@
         <div data-tip="success" class="rounded-full h-6 w-6 tooltip bg-[var(--color-success)]"></div>
         <div data-tip="error" class="rounded-full h-6 w-6 tooltip bg-[var(--color-error)]"></div>
     </div>
-    <div class="flex-1 min-w-0 flex flex-col gap-2 items-start ">
-        <span class="truncate block max-w-[96px] self-center">{theme_name}</span>
+    <div class="flex-1 min-w-0 flex flex-col gap-2 items-start">
+        <span class="truncate block max-w-[96px] self-center min-w-0">{theme_name}</span>
         <slot></slot>
   </div>
 </div>

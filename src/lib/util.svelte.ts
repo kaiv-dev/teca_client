@@ -1,4 +1,4 @@
-import { writable, type Writable } from "svelte/store";
+import { writable, type Unsubscriber, type Writable } from "svelte/store";
 
 export function oklchToRGB(oklch: string): {r: number, g: number, b: number} {
     const canvas = document.createElement("canvas");
@@ -68,10 +68,40 @@ export function formatTimestamp(ms: number) {
 }
 
 
+const WRITABLE_STORE : Map<string, Writable<any>> = new Map();
+
+export function subscribeLocalState<T>(key: string, fn: (value: T) => void): Unsubscriber | null {
+    const store = WRITABLE_STORE.get(key);
+    if (!store) return null;
+    return store.subscribe(fn);
+}
+
+export function getLocalState<T>(key: string): Writable<T> | null {
+    const store = WRITABLE_STORE.get(key);
+    if (!store) return null;
+    return store;
+}
+
 export function localState<T>(key: string, defaultValue: T): Writable<T> {
+    if (WRITABLE_STORE.has(key)) return WRITABLE_STORE.get(key) as Writable<T>;
+
     const stored = localStorage.getItem(key);
-    let w = writable(stored ? JSON.parse(stored) : defaultValue);
-    w.subscribe(value => localStorage.setItem(key, JSON.stringify(value)));
+    console.log(`[LOCAL STATE] READ ${key} : ${stored}`);
+
+    let parsed: T;
+    if (stored && stored !== "undefined") {
+        parsed = JSON.parse(stored);
+    } else {
+        parsed = defaultValue;
+    }
+
+    const w = writable<T>(parsed);
+    w.subscribe(value => {
+        console.log(`[LOCAL STATE] SET ${key} : ${value}`);
+        localStorage.setItem(key, JSON.stringify(value));
+    });
+
+    WRITABLE_STORE.set(key, w);
     return w;
 }
 

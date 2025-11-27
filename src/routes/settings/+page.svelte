@@ -22,6 +22,9 @@
     import { type MiniprofileTheme } from "$lib/theme/miniprofile.svelte";
     import { newToast } from "$lib/toast.svelte";
     import { media_limit, MEDIA_RULE } from "$lib/globals.svelte";
+    import SettingTheme from "./setting_theme.svelte";
+    import SettingWindow from "./setting_window.svelte";
+  import { isDesktop } from "$lib/platform.svelte";
     
     
     let themes : Writable<Record<string, string>> = localState("saved_themes", {});
@@ -108,7 +111,7 @@
 
 <div 
 style=""
-class="flex-grow flex justify-center relative vh min-w-[900px] p-2"
+class="flex justify-center relative p-2 overflow-y-scroll h-full"
 >
 
 {#if popup}
@@ -121,90 +124,11 @@ class="flex-grow flex justify-center relative vh min-w-[900px] p-2"
 </Popup>
 {/if}
 
-<div class="w-full flex justify-center relative">
-    <div class="w-full flex flex-col h-fit max-w-[900px] p-2 card-base card-100 card-100-border gap-2">
-        <CollapseSetting icon="mingcute:paint-brush-ai-line" open>
-            <!-- TODO: ACTIVE STYLE -->
-            <div slot="title">Theme</div>
-            <div slot="content" class="dark-picker h-fit flex flex-col gap-2 bg-[var(--tinted-sec-200o)]">
-                <LabelSeparator><h2>Customize</h2></LabelSeparator>
-                <div class="flex flex-row p-2 card-base card-100 card-100-border">
-                    <div class="grid grid-rows-4 w-full h-full gap-2 grid-flow-col no-alpha">
-                        {#each appThemeTypes.fake_rgba as t}
-                            <ColorPicker
-                                label={$THEME[t].display_name}
-                                isAlpha={false}
-                                bind:rgb={$THEME[t].value as RgbaColor /*stupid ts*/}
-                            />
-                        {/each}
-                        <div class="flex items-center gap-2">
-                            <label class="cursor-pointer flex items-center gap-2 pl-2"><BorderCheckbox bind:checked={$THEME.neo.value} class="checkbox-primary"/>Neo theme?</label> 
-                        </div>
-                        {#each appThemeTypes.px as t}
-                            <div class="flex h-full w-full items-center font-semibold">{$THEME[t].display_name}</div>
-                            <input type="range" min="0" max="20" class="range" bind:value={$THEME[t].value} />
-                        {/each}
-
-                        {#each appThemeTypes.percent as t}
-                            <div class="flex h-full w-full items-center font-semibold">{$THEME[t].display_name}</div>
-                            <input type="range" min="0" max="20" class="range" bind:value={$THEME[t].value} />
-                        {/each}
-                    </div>
-                </div>
-                <div class="flex flex-row p-2 gap-2 w-full">
-                    <button onclick={async () => {let theme = deserializeTheme(await navigator.clipboard.readText());setNonOverrideTheme(theme)}} class="z-[1] tooltip tooltip-right btn btn-border btn-primary hover:btn-error" data-tip="Paste from clipboard"><Icon height=24px icon="tabler:clipboard"/></button>
-                    <button onclick={() => {let theme = serializeTheme($THEME);navigator.clipboard.writeText(theme);}} class="tooltip btn btn-border btn-primary" data-tip="Copy to clipboard"><Icon height=24px icon="tabler:copy"/></button>
-                    <BorderInput id="theme_name" placeholder="Theme name" icon="mingcute:palette-line" class="flex-grow input-primary" bind:value={theme_name}></BorderInput>
-                    <Button icon="mingcute:save-2-line" class="btn btn-primary btn-border pr-2" onclick={saveTheme}>Save Theme</Button>
-                    <Button icon="mingcute:pin-line" class="btn btn-primary btn-border pr-2" onclick={openPicker}>Unpin picker</Button>
-                </div>
-                <LabelSeparator><h2>Your themes</h2></LabelSeparator>
-                <div class="grid grid-cols-4 gap-2 ">
-                    {#key updater}
-                    {#each Object.entries(parsed_themes) as [key, theme] (key)}
-                        <ThemePreview theme={{theme: theme, name: key}}
-                        onclick={()=> {setNonOverrideTheme(theme); theme_name = key;}}
-                        >
-                        <Button icon="tabler:trash" class="btn btn-border btn-error w-full pr-1" onclick={(e : MouseEvent) => {e.preventDefault(); e.stopPropagation(); deleteTheme(key)}}></Button>
-                        </ThemePreview>
-                    {/each}
-                    {/key}
-                </div>  
-                <LabelSeparator><h2>Default presets</h2></LabelSeparator>
-                <div class="grid grid-cols-4 gap-2">
-                    {#each default_themes as t}
-                        <ThemePreview 
-                        theme={t}
-                        onclick={() => {theme_name = prettify(t); setDefaultTheme(t)}}
-                        >
-                            <!-- <Button icon="tabler:trash-bin" class="btn-border btn-primary w-full pr-1">Button</Button> -->
-                        </ThemePreview>
-                    {/each}
-                </div>  
-
-            </div>
-        </CollapseSetting>
-        {#if $USER_GUID != null}
-        <CollapseSetting icon="mingcute:user-3-line" open>
-            <div slot="title">Account</div>
-            <div slot="content" class="flex flex-col gap-4">
-                {#key profile_editor}
-                    <Miniprofile 
-                        user_id={$USER_GUID} 
-                        id={MINIPROFILE_PREVIEW}
-                        start_edit={start_edit_miniprofile}
-                    />
-                {/key}
-                <select class="select" bind:value={$MEDIA_RULE}>
-                    <option value="none">[max {media_limit}MB] Dont do anything</option>
-                    <!-- <option value="compress">[max {media_limit}MB] Compress to {media_limit}MB before send</option> -->
-                    <option value="catbox">[max 200MB] Upload to catbox (your media will be public) </option>
-                </select>
-                <button class="btn w-full hover-shake btn-error btn-border" onclick={()=> {logout();newToast("Logged out", "btn-error")}}>Log out</button>
-            </div>
-        </CollapseSetting>
-        {/if}
-    </div>
+<div class="w-full flex relative flex-col gap-2 max-w-[900px]">
+    {#if isDesktop()}
+    <SettingWindow/>
+    {/if}
+    <SettingTheme/>
+    <div class="min-h-[64px]"></div>
 </div>
-
 </div>

@@ -5,10 +5,6 @@ import { MOUSE_POS, refresh_user_miniprofile_cache } from "$lib/globals.svelte";
 import { get } from "svelte/store";
 import { vec2, sub } from "$lib/util.svelte";
 
-
-
-
-
 export function showFollowingMiniprofile(guid: string, id: string){
     refresh_user_miniprofile_cache(guid);
 

@@ -13,6 +13,7 @@
   import { PUBLIC_API_BASE } from "$env/static/public";
   import { goto } from "$app/navigation";
   import Noise from "../../components/bg/noise.svelte";
+  import Bg from "../../components/bg/bg.svelte";
 
   let popup_callback : null | ((token: string) => void) = $state(null);
   let process_popup : boolean = $state(false);
@@ -83,8 +84,7 @@
 
 
 
-<div class="flex-grow flex justify-center main_content overflow-clip main_content_shadow">
-  <Noise/>
+<div class="flex justify-center w-full h-full">
   {#if popup_callback}
   <Popup on_deny={() => {popup_callback = null}}>
     <strong class="text-center">To continue pass the challenge:</strong>
