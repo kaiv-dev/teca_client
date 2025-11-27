@@ -156,7 +156,8 @@ const wrapped_dt = () : number => {
     return Math.min(0.025, dt / 1000.0);
 }
 
-const SCREEN_MARGIN = 20;
+const SCREEN_MARGIN = 28;
+const SCREEN_MARGIN_BOTTOM = 18;
 let tick = 0;
 
 const SLEEP_DT = 1000;
@@ -226,7 +227,7 @@ function update_floating(w: FloatingWindow, dt: number, now: number) {
     const min_x = half_size.x + SCREEN_MARGIN - half_screen.x;
     const min_y = half_size.y + SCREEN_MARGIN - half_screen.y;
     const max_x = half_screen.x - half_size.x - SCREEN_MARGIN;
-    const max_y = half_screen.y - half_size.y - SCREEN_MARGIN;
+    const max_y = half_screen.y - half_size.y - SCREEN_MARGIN_BOTTOM;
 
     let is_bound_x_min = (v: number) : boolean => v < min_x;
     let is_bound_x_max = (v: number) : boolean => v > max_x;
@@ -312,9 +313,21 @@ function update_following(w: FloatingWindow, dt: number, now: number, mouse_pos:
 }
 
 
+var last_screen : Vec2 | null = null;
+
 
 async function tick_windows() {
     let dt = wrapped_dt();
+
+    // const screen_x = window.screenX ?? window.screenLeft;
+    // const screen_y = window.screenY ?? window.screenTop;
+    // const curr = vec2(screen_x, screen_y);
+    // if (last_screen == null) {
+    //     last_screen = curr;
+    // }
+    // var screen_dt = mul(sub(last_screen, curr), dt * 500);
+    // var moved = screen_dt.x > 0.1 || screen_dt.y > 0.1; 
+    // last_screen = curr;
 
     let now = Date.now();
     let is_resizing = now - latest_resize < LATEST_RESIZE_DT;
@@ -325,6 +338,12 @@ async function tick_windows() {
             
             switch (w.type.mode) {
                 case "floating":
+                    // if (moved) {
+                    //     w.inactive_since = now;
+                    //     is_sleeping = false;
+                    //     w.velocity = add(w.velocity, screen_dt);
+                    // }
+                    
                     if (is_sleeping && !is_resizing) { 
                         continue;
                     }

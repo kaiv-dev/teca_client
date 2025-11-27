@@ -8,7 +8,13 @@
         <div 
             id="{FLOATING_PREFIX}{id}"
             class="absolute shadow-lg translate-x-[-50%] translate-y-[-50%] { w.type.mode === "floating" ? "cursor-grab active:cursor-grabbing pointer-events-auto" : " " }" 
-            style="top: calc(50% + {Math.round(w.pos.y) + (1 - Math.round(w.size.y) % 2)}px); left: calc(50% + {Math.round(w.pos.x) + (1 - Math.round(w.size.x) % 2)}px); width: {Math.round(w.size.x)}px; height: {Math.round(w.size.y)}px; z-index: {w.z_index};">
+            style="
+            top: calc(50% + { Math.floor(w.pos.y) + (1 - Math.floor(w.size.y) % 2)}px); 
+            left: calc(50% + {Math.floor(w.pos.x) + (1 - Math.floor(w.size.x) % 2)}px);
+            width: {Math.floor(w.size.x)}px;
+            height: {Math.floor(w.size.y)}px;
+            z-index: {w.z_index};"
+        >
             {#if w.type.mode === "floating"}
                 <div class="z-[250] absolute -top-1 w-full h-2 cursor-n-resize" onmousedown={(e) => handleResizeStart(e, w, 0b1000)}></div>
                 <div class="z-[250] absolute -bottom-1 w-full h-2 cursor-s-resize" onmousedown={(e) => handleResizeStart(e, w, 0b0100)}> </div>
