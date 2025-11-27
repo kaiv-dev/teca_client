@@ -12,6 +12,9 @@
         {id: '1', name: 'Avatar 1'},
         {id: '2', name: 'Avatar 2'},
         {id: '3', name: 'Avatar 3'},
+        {id: '4', name: 'Avatar 3'},
+        {id: '5', name: 'Avatar 3'},
+        {id: '6', name: 'Avatar 3'},
     ]);
     let cols = $state(2);
 
