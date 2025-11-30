@@ -1,3 +1,3 @@
-package dev.kaiv.teca.app
+package dev.kaiv.vesper.app
 
 class MainActivity : TauriActivity()

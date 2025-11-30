@@ -33,7 +33,7 @@
           newToast(r, "btn-error");
         } else {
           setAccess(r);
-          newToast("Welcome to Teca!", "btn-success");
+          newToast("Welcome to Vesper!", "btn-success");
         }
         process_popup = false;
       })()
@@ -60,7 +60,7 @@
         newToast(r, "btn-error");
       } else {
         setAccess(r);
-        newToast("Welcome to Teca!", "btn-success");
+        newToast("Welcome to Vesper!", "btn-success");
         goto("/")
       }
       return

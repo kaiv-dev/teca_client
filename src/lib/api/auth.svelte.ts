@@ -42,7 +42,7 @@ export function determineRegisterError(error: string) :
     return error
 }
 
-export async function register(turnstile: string, guid: string, password: string, nickname: string, email: string, email_code: string, ) : Promise<{access_token: string, exp: number} | string> {
+export async function register(turnstile: string, uid: string, password: string, nickname: string, email: string, email_code: string, ) : Promise<{access_token: string, exp: number} | string> {
     try {
         const res = await fetch(`${PUBLIC_API_BASE}/api/auth/account`, {
             headers: {
@@ -50,7 +50,7 @@ export async function register(turnstile: string, guid: string, password: string
             },
             method: "POST",
             body: JSON.stringify({
-                "guid": guid,
+                "uid": uid,
                 "nickname": nickname,
                 "password": password,
                 "fingerprint": DEVICE_FINGERPRINT, // TODO!

@@ -60,48 +60,48 @@
 
 
 
-    (async () => {
-        let r = await get_rooms();
-        r.forEach((room) => {
-            rooms[room.guid] = room;
-        });
+    // (async () => {
+    //     let r = await get_rooms();
+    //     r.forEach((room) => {
+    //         rooms[room.guid] = room;
+    //     });
 
-        let token = get(ACCESS_TOKEN);
-        if (token) {
-            await init_calls({ token: token });
-        } else {
-            await init_calls({ name: "KELLIA" });
-        }
+    //     let token = get(ACCESS_TOKEN);
+    //     if (token) {
+    //         await init_calls({ token: token });
+    //     } else {
+    //         await init_calls({ name: "KELLIA" });
+    //     }
 
-        calls_socket?.on('room_created', (j) => {
-            rooms = { ...rooms, [j.room.guid]: j.room };
-        });
+    //     calls_socket?.on('room_created', (j) => {
+    //         rooms = { ...rooms, [j.room.guid]: j.room };
+    //     });
 
-        calls_socket?.on('room_deleted', (j) => {
-            const { [j.room_guid]: _, ...rest } = rooms;
-            rooms = rest;
-        });
+    //     calls_socket?.on('room_deleted', (j) => {
+    //         const { [j.room_guid]: _, ...rest } = rooms;
+    //         rooms = rest;
+    //     });
 
-        calls_socket?.on('room_join', (j) => {
-            if (!(j.room_guid in rooms)) return;
-            const room = rooms[j.room_guid];
-            const newUsers = room.users;
-            room.users[j.user.guid] = j.user;
-            rooms = { ...rooms, [j.room_guid]: { ...room, users: newUsers } };
-        });
+    //     calls_socket?.on('room_join', (j) => {
+    //         if (!(j.room_guid in rooms)) return;
+    //         const room = rooms[j.room_guid];
+    //         const newUsers = room.users;
+    //         room.users[j.user.guid] = j.user;
+    //         rooms = { ...rooms, [j.room_guid]: { ...room, users: newUsers } };
+    //     });
 
-        calls_socket?.on('room_leave', (j) => {
-            if (!(j.room_guid in rooms)) return;
-            const room = rooms[j.room_guid];
-            const newUsers = room.users;
-            delete room.users[j.user.guid];
-            rooms = { ...rooms, [j.room_guid]: { ...room, users: newUsers } };
-        });
+    //     calls_socket?.on('room_leave', (j) => {
+    //         if (!(j.room_guid in rooms)) return;
+    //         const room = rooms[j.room_guid];
+    //         const newUsers = room.users;
+    //         delete room.users[j.user.guid];
+    //         rooms = { ...rooms, [j.room_guid]: { ...room, users: newUsers } };
+    //     });
 
-        calls_socket?.on('error', (j) => {
-            newToast(j.msg, 'btn-error');
-        });
-    })();
+    //     calls_socket?.on('error', (j) => {
+    //         newToast(j.msg, 'btn-error');
+    //     });
+    // })();
 
 </script>
 
